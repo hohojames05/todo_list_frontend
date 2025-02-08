@@ -1,4 +1,46 @@
-<div>
+<main cdkDropListGroup class="todo-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 pb-3">
+        <input [(ngModel)]="todoTitle" placeholder="Title" type="text" class="form-control">
+      </div>
+      <div class="col-md-4 pb-3">
+        <input [(ngModel)]="todoDescription" placeholder="Description" type="text" class="form-control">
+      </div>
+      <div class="col-md-4 pb-3">
+        <button (click)="addTask()" class="btn btn-primary w-100">Add Task</button>
+      </div>
+    </div>
+  </div>
+  <div cdkDropList
+       [cdkDropListData]="todoList"
+       class="todo-list"
+       (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let todoItem of todoList" cdkDrag class="todo">
+      <div class="ms-2 me-auto" *ngIf="editableId === todoItem.id">
+        <div class="fw-bold">
+          <label>Title</label><input [(ngModel)]="todoItem.title" type="text" class="form-control">
+          <label>Status</label><input [(ngModel)]="todoItem.status" type="text" class="form-control">
+          <label>Description</label><input [(ngModel)]="todoItem.description" type="text" class="form-control">
+        </div>
+      </div>
 
-    Hello World
-</div>
+      <div class="ms-2 me-auto" *ngIf="editableId !== todoItem.id">
+        <div class="fw-bold">
+          {{todoItem.title}}
+          <label [ngClass]="{
+            'status-pending': todoItem.status === 0,
+            'status-in-progress': todoItem.status === 1,
+            'status-completed': todoItem.status === 2
+            }" class="status">{{todoItem.status}}</label>
+        </div>
+        {{todoItem.description}}
+      </div>
+      <div class="mb-3 ms-auto">
+        <button *ngIf="editableId === todoItem.id" pButton class="btn btn-primary w-5 me-2" type="button" (click)="saveTask(todoItem)">SAVE</button>
+        <button *ngIf="editableId !== todoItem.id" pButton class="btn btn-primary w-5 me-2" type="button" (click)="editTask(todoItem.id)">EDIT</button>
+        <button pButton class="btn btn-primary w-5" type="button" (click)="removeTask(todoItem.id)">DELETE</button>
+      </div>
+    </div>
+  </div>
+</main>
