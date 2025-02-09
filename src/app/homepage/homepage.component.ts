@@ -6,6 +6,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Guid } from '../shared/utils/guid';
 import { ConfirmationService } from 'primeng/api';
 import { HttpParams } from '@angular/common/http';
+import { todo } from 'node:test';
 
 @Component({
   selector: 'app-homepage',
@@ -23,7 +24,9 @@ export class HomepageComponent implements OnInit {
   todoTitle: string = '';
   todoDescription: string = '';
   todoList: TodoList[] = [];
+  statusOptions: any[] = [];
   editableId?: Guid | null = null;
+  orderBy: string = "";
 
   ngOnInit(): void {
     this.todoListService.get().subscribe((response: ApiResponse): void => {
@@ -47,6 +50,9 @@ export class HomepageComponent implements OnInit {
 
   editTask(id?: Guid) {
     this.editableId = id;
+    this.todoListService.getStatus().subscribe((response: ApiResponse): void => {
+      this.statusOptions = response.data;
+    });
   }
 
   saveTask(todoItem: TodoList) {
@@ -70,5 +76,14 @@ export class HomepageComponent implements OnInit {
 
   drop(event: CdkDragDrop<TodoList[]>): void {
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+  }
+
+  sortList(orderBy: string) {
+    this.orderBy = orderBy;
+    const params = new HttpParams()
+      .set('order_by', this.orderBy);
+    this.todoListService.get(params).subscribe((response: ApiResponse): void => {
+      this.todoList = response.data;
+    });
   }
 }

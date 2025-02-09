@@ -14,8 +14,8 @@ const API_URL: string = 'http://localhost:3000';
 export class TodoListService {
   constructor(protected http: HttpClient) {}
 
-  get(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${API_URL}/todo_items`, {});
+  get(params?: HttpParams): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${API_URL}/todo_items`, {params});
   }
 
   create(params?: HttpParams): Observable<ApiResponse> {
@@ -28,5 +28,9 @@ export class TodoListService {
 
   delete(id?: Guid): Observable<ApiResponse> {
     return this.http.delete<ApiResponse>(`${API_URL}/todo_items/${id}`);
+  }
+
+  getStatus(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${API_URL}/todo_items/get_status`, {});
   }
 }

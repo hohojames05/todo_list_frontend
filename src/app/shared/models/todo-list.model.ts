@@ -4,6 +4,6 @@ export interface TodoList {
   id?: Guid;
   title: string;
   description: string;
-  status: number;
+  status: string;
   updated_at?: string;
 }

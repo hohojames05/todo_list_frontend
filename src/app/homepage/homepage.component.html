@@ -2,13 +2,21 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4 pb-3">
-        <input [(ngModel)]="todoTitle" placeholder="Title" type="text" class="form-control">
+        <input [(ngModel)]="todoTitle" placeholder="Title" type="text" class="form-control" required>
       </div>
       <div class="col-md-4 pb-3">
-        <input [(ngModel)]="todoDescription" placeholder="Description" type="text" class="form-control">
+        <input [(ngModel)]="todoDescription" placeholder="Description" type="text" class="form-control" required>
       </div>
       <div class="col-md-4 pb-3">
         <button (click)="addTask()" class="btn btn-primary w-100">Add Task</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 pb-3">
+        <button (click)="sortList('asc')" class="btn btn-primary w-100">Ascending</button>
+      </div>
+      <div class="col-md-2 pb-3">
+        <button (click)="sortList('desc')" class="btn btn-primary w-100">Descending</button>
       </div>
     </div>
   </div>
@@ -19,25 +27,28 @@
     <div *ngFor="let todoItem of todoList" cdkDrag class="todo">
       <div class="ms-2 me-auto" *ngIf="editableId === todoItem.id">
         <div class="fw-bold">
-          <label>Title</label><input [(ngModel)]="todoItem.title" type="text" class="form-control">
-          <label>Status</label><input [(ngModel)]="todoItem.status" type="text" class="form-control">
-          <label>Description</label><input [(ngModel)]="todoItem.description" type="text" class="form-control">
+          <label>Title</label><input [(ngModel)]="todoItem.title" type="text" class="form-control" required>
+          <label>Status</label>
+          <select [(ngModel)]="todoItem.status" class="form-control" required>
+            <option *ngFor="let status of statusOptions" [value]="status.key">{{status.name}}</option>
+          </select>
+          <label>Description</label><input [(ngModel)]="todoItem.description" type="text" class="form-control" required>
         </div>
       </div>
 
       <div class="ms-2 me-auto" *ngIf="editableId !== todoItem.id">
         <div class="fw-bold">
           {{todoItem.title}}
-          <label [ngClass]="{
-            'status-pending': todoItem.status === 0,
-            'status-in-progress': todoItem.status === 1,
-            'status-completed': todoItem.status === 2
-            }" class="status">{{todoItem.status}}</label>
+          <span [ngClass]="{
+            'status-pending': todoItem.status === 'pending',
+            'status-in-progress': todoItem.status === 'inprogress',
+            'status-completed': todoItem.status === 'completed'
+            }" class="status">{{todoItem.status}}</span>
         </div>
         {{todoItem.description}}
       </div>
       <div class="mb-3 ms-auto">
-        <button *ngIf="editableId === todoItem.id" pButton class="btn btn-primary w-5 me-2" type="button" (click)="saveTask(todoItem)">SAVE</button>
+        <button *ngIf="editableId === todoItem.id" pButton class="btn btn-primary w-5 me-2" type="submit" (click)="saveTask(todoItem)" [disabled]="!todoItem.title || !todoItem.status || !todoItem.description">SAVE</button>
         <button *ngIf="editableId !== todoItem.id" pButton class="btn btn-primary w-5 me-2" type="button" (click)="editTask(todoItem.id)">EDIT</button>
         <button pButton class="btn btn-primary w-5" type="button" (click)="removeTask(todoItem.id)">DELETE</button>
       </div>
