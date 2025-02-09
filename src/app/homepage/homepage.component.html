@@ -13,10 +13,16 @@
     </div>
     <div class="row">
       <div class="col-md-2 pb-3">
-        <button (click)="sortList('asc')" class="btn btn-primary w-100">Ascending</button>
+        <select [(ngModel)]="sortBy" class="form-control" required>
+          <option value="" disabled selected>Sort By</option>
+          <option *ngFor="let sorting of sortingOptions" [value]="sorting.value">{{sorting.label}}</option>
+        </select>
       </div>
       <div class="col-md-2 pb-3">
-        <button (click)="sortList('desc')" class="btn btn-primary w-100">Descending</button>
+        <button (click)="sortList('asc')" class="btn btn-primary w-100" [disabled]="!sortBy">Ascending</button>
+      </div>
+      <div class="col-md-2 pb-3">
+        <button (click)="sortList('desc')" class="btn btn-primary w-100" [disabled]="!sortBy">Descending</button>
       </div>
     </div>
   </div>

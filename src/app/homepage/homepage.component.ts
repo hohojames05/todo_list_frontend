@@ -27,6 +27,14 @@ export class HomepageComponent implements OnInit {
   statusOptions: any[] = [];
   editableId?: Guid | null = null;
   orderBy: string = "";
+  sortBy: string = "";
+
+  sortingOptions = [
+    { label: 'Title', value: 'title' },
+    { label: 'Description', value: 'description'},
+    { label: 'Status', value: 'status' },
+    { label: 'Updated At', value: 'updated_at'}
+  ];
 
   ngOnInit(): void {
     this.todoListService.get().subscribe((response: ApiResponse): void => {
@@ -81,7 +89,8 @@ export class HomepageComponent implements OnInit {
   sortList(orderBy: string) {
     this.orderBy = orderBy;
     const params = new HttpParams()
-      .set('order_by', this.orderBy);
+      .set('order_by', this.orderBy)
+      .set('sort_by', this.sortBy);
     this.todoListService.get(params).subscribe((response: ApiResponse): void => {
       this.todoList = response.data;
     });
